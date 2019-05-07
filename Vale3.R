@@ -3,14 +3,14 @@ install.packages('ggplot2')
 install.packages('ggthemes')
 install.packages('scales')
 install.packages('tseries')
+install.packages('graphicsQC')
 install.packages('quantmod')
 install.packages('dgof')
-install.packages('qqnorm')
 install.packages('ggthemes')
 install.packages('zoo')
-install.packages('xts')
 
 library(tseries)
+library(graphics)
 library(dgof)
 library(qqnorm)
 library(quantmod)
@@ -29,21 +29,25 @@ vale = env$VALE3.SA[,4]
 
 autoplot(vale)
 
+datavale <- data.frame(vale)
+
 #Selecionando valores
 tam <-length(vale)
-pri <- vale [1]
-ult <- vale[tam]
+pri <- datavale [1,1]
+ult <- datavale [tam,1]
 
 #Medidas de variabilidade
 media <- mean(vale)
 desvio <- sd(vale)
 
-#Grafico do quantil
-qqnorm(vale)
-
-#Volatilidade
-vol <- garch(vale)
+#Rentabilidade
+##Rentabilidade no período
+rp <- (ult/pri) - 1
+##Rentabilidade anual
+ra <- (1 + rp)^(252/329) - 1
 
 #Teste Jarque Bera
-jarque.bera.test(vol$resid[-1])
+jarque.bera.test(vale)
+
+#
 
