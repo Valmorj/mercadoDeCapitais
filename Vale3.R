@@ -8,6 +8,7 @@ install.packages('quantmod')
 install.packages('dgof')
 install.packages('ggthemes')
 install.packages('zoo')
+install.packages('KScorrect')
 
 library(tseries)
 library(graphics)
@@ -19,6 +20,7 @@ library(scales)
 library(ggthemes)
 library(zoo)
 library(xts)
+library(KScorrect)
 
 #Carregando a ação e plotando o gráfico
 env = new.env()
@@ -39,15 +41,21 @@ ult <- datavale [tam,1]
 #Medidas de variabilidade
 media <- mean(vale)
 desvio <- sd(vale)
+dist <- rnorm(tam, media, desvio)
+
 
 #Rentabilidade
 ##Rentabilidade no período
 rp <- (ult/pri) - 1
 ##Rentabilidade anual
-ra <- (1 + rp)^(252/329) - 1
+ra <- (1 + rp)^(252/tam) - 1
 
 #Teste Jarque Bera
 jarque.bera.test(vale)
 
-#
+#Teste Kolmogorov-Smirnov(KS)
+ks.test()
 
+#Teste ADF
+adf.test(vale, alternative = c("stationary", "explosive"),
+         k = trunc((length(vale)-1)^(1/3)))
